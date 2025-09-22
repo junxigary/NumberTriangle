@@ -1,4 +1,6 @@
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This is the provided NumberTriangle class to be used in this coding task.
@@ -115,11 +117,11 @@ public class NumberTriangle {
         // open the file and get a BufferedReader object whose methods
         // are more convenient to work with when reading the file contents.
         InputStream inputStream = NumberTriangle.class.getClassLoader().getResourceAsStream(fname);
+        if (inputStream == null) {
+            throw new FileNotFoundException("File not found: " + fname);
+        }
         BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
-
-
-        // TODO define any variables that you want to use to store things
-
+        List<List<NumberTriangle>> rows = new ArrayList<>();
         // will need to return the top of the NumberTriangle,
         // so might want a variable for that.
         NumberTriangle top = null;
@@ -129,11 +131,28 @@ public class NumberTriangle {
 
             // remove when done; this line is included so running starter code prints the contents of the file
             System.out.println(line);
-
-            // TODO process the line
+            String[] numberStrs = line.trim().split("\\s+");
+            List<NumberTriangle> currentRow = new ArrayList<>();
+            for (String numStr : numberStrs) {
+                int value = Integer.parseInt(numStr);
+                currentRow.add(new NumberTriangle(value));
+            }
+            rows.add(currentRow);
 
             //read the next line
             line = br.readLine();
+        }
+        for (int i = 1; i < rows.size(); i++) {
+            List<NumberTriangle> prevRow = rows.get(i - 1);
+            List<NumberTriangle> currRow = rows.get(i);
+            for (int j = 0; j < prevRow.size(); j++) {
+                NumberTriangle parent = prevRow.get(j);
+                parent.setLeft(currRow.get(j));
+                parent.setRight(currRow.get(j + 1));
+            }
+        }
+        if (!rows.isEmpty()) {
+            top = rows.get(0).get(0);
         }
         br.close();
         return top;
