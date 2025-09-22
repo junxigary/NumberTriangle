@@ -100,7 +100,6 @@ public class NumberTriangle {
         }
     }
 
-
     /** Read in the NumberTriangle structure from a file.
      *
      * You may assume that it is a valid format with a height of at least 1,
